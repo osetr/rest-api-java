@@ -148,4 +148,42 @@ public class ClientDAO implements com.example.rest.idao.ClientDAO {
         }
         return clientList;
     }
+
+    public Client find(String email) {
+        Client client = new Client();
+
+        try {
+            String queryString = "SELECT * FROM client WHERE name='" + email + "'";
+            connection = getConnection();
+            ptmt = connection.prepareStatement(queryString);
+            resultSet = ptmt.executeQuery();
+
+            while (resultSet.next()) {
+                client.setId(resultSet.getInt("id"));
+                client.setName(resultSet.getString("name"));
+                client.setEmail(resultSet.getString("email"));
+                client.setPassword(resultSet.getString("password"));
+                client.setAge(resultSet.getInt("age"));
+                client.setWeight(resultSet.getInt("weight"));
+                client.setHeight(resultSet.getInt("height"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (resultSet != null)
+                    resultSet.close();
+                if (ptmt != null)
+                    ptmt.close();
+                if (connection != null)
+                    connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return client;
+    }
 }
