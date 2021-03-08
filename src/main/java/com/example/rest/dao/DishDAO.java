@@ -1,5 +1,6 @@
 package com.example.rest.dao;
 
+import com.example.rest.entities.Client;
 import com.example.rest.entities.Dish;
 
 import java.sql.Connection;
@@ -143,5 +144,41 @@ public class DishDAO implements com.example.rest.idao.DishDAO {
             }
         }
         return dishList;
+    }
+
+    public Dish find(int id) {
+        Dish dish = new Dish();
+
+        try {
+            String queryString = "SELECT * FROM dish WHERE id='" + id + "'";
+            connection = getConnection();
+            ptmt = connection.prepareStatement(queryString);
+            resultSet = ptmt.executeQuery();
+
+            while (resultSet.next()) {
+                dish.setId(resultSet.getInt("id"));
+                dish.setName(resultSet.getString("name"));
+                dish.setFats(resultSet.getInt("fats"));
+                dish.setProteins(resultSet.getInt("proteins"));
+                dish.setCarbohydrates(resultSet.getInt("carbohydrates"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (resultSet != null)
+                    resultSet.close();
+                if (ptmt != null)
+                    ptmt.close();
+                if (connection != null)
+                    connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return dish;
     }
 }

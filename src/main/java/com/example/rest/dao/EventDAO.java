@@ -1,5 +1,6 @@
 package com.example.rest.dao;
 
+import com.example.rest.entities.Dish;
 import com.example.rest.entities.Event;
 
 import java.sql.Connection;
@@ -46,7 +47,6 @@ public class EventDAO implements com.example.rest.idao.EventDAO{
             }
 
         }
-
     }
 
     public void delete(int id) {
@@ -88,8 +88,8 @@ public class EventDAO implements com.example.rest.idao.EventDAO{
                 Event event = new Event();
 
                 event.setId(resultSet.getInt("id"));
-                event.setClient(resultSet.getInt("client"));
-                event.setDish(resultSet.getInt("dish"));
+                event.setClient(resultSet.getInt("client_id"));
+                event.setDish(resultSet.getInt("dish_id"));
 
                 eventList.add(event);
             }
@@ -111,4 +111,37 @@ public class EventDAO implements com.example.rest.idao.EventDAO{
         }
         return eventList;
     }
+
+    public List<Dish> findCurrentDayDishes(int id) {
+        List<Dish> dishesList = new ArrayList<>();
+
+        try {
+            String queryString = "SELECT * FROM event WHERE client_id='" + id + "'";
+            connection = getConnection();
+            ptmt = connection.prepareStatement(queryString);
+            resultSet = ptmt.executeQuery();
+            while (resultSet.next()) {
+                DishDAO dishDAO = new DishDAO();
+                Dish dish = dishDAO.find(resultSet.getInt("dish_id"));
+                dishesList.add(dish);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (resultSet != null)
+                    resultSet.close();
+                if (ptmt != null)
+                    ptmt.close();
+                if (connection != null)
+                    connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return dishesList;
+    }
+
 }

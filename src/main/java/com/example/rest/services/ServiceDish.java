@@ -2,6 +2,7 @@ package com.example.rest.services;
 
 import com.example.rest.dao.DishDAO;
 import com.example.rest.entities.Dish;
+import java.util.List;
 
 public class ServiceDish {
     public Boolean validateAndSave (String name, String c, String f, String p){
@@ -19,4 +20,10 @@ public class ServiceDish {
             return false;
         }
     }
+
+    public List<Dish> findAll() {
+        DishDAO dishDAO = new DishDAO();
+        return dishDAO.findAll();
+    }
+
 }
