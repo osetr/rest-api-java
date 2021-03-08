@@ -29,6 +29,26 @@ public class CommandHome implements ICommand{
             List<Dish> events = serviceEvent.findCurrentDayDishes(Integer.parseInt(session.getAttribute("client").toString()));
             request.setAttribute("events", events);
 
+            int fats = 0;
+            int proteins = 0;
+            int carbohydrates = 0;
+
+            for (Dish dish : events) {
+                fats += dish.getFats();
+                proteins += dish.getProteins();
+                carbohydrates += dish.getCarbohydrates();
+            }
+
+            System.out.println(fats);
+            System.out.println(proteins);
+            System.out.println(carbohydrates);
+
+            if (fats > 300 | proteins > 500 | carbohydrates > 1000) {
+                request.setAttribute("message", "limit reached");
+            } else {
+                request.setAttribute("message", "");
+            }
+
             return "/home.jsp";
         }
 

@@ -29,6 +29,6 @@
             <tr><td>${event.getName()}</td><td>${event.getProteins()}</td><td>${event.getFats()}</td><td>${event.getCarbohydrates()}</td></tr>
         </c:forEach>
     </table>
-
+    <p style="color: red;">${message}</p>
 </body>
 </html>
